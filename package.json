@@ -1,0 +1,17 @@
+{
+	"name": "gatsby-source-notion-api",
+	"version": "0.0.0",
+	"description": "Gatsby source plugin for official Notion.so API",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "echo \"No build script setup\""
+	},
+	"keywords": [
+		"gatsby",
+		"gatsby-plugin",
+		"notion"
+	],
+	"author": "Sergei Orlov <hello@orlow.dev> (https://orlow.dev/)",
+	"license": "MIT"
+}
