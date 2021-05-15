@@ -1,0 +1,28 @@
+name: Codecov Reports
+on: [push]
+jobs:
+ run:
+  runs-on: ${{ matrix.os }}
+  strategy:
+   matrix:
+    os: [ubuntu-latest, macos-latest, windows-latest]
+  env:
+   OS: ${{ matrix.os }}
+   NODE: '12.x'
+  steps:
+   - uses: actions/checkout@master
+   - name: Setup Node
+     uses: actions/setup-node@v1
+     with:
+      node-version: '12.x'
+   - name: Install dependencies
+     run: yarn
+   - name: Generate coverage report
+     run: yarn test:cover
+   - name: Upload coverage to Codecov
+     uses: codecov/codecov-action@v1
+     with:
+      flags: unittests
+      env_vars: OS,NODE
+      name: codecov-umbrella
+      fail_ci_if_error: true

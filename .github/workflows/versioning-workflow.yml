@@ -1,0 +1,19 @@
+name: Versioning
+on:
+ push:
+  branches: [main]
+jobs:
+ versioning:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v2
+     with:
+      fetch-depth: 0
+   - name: Setup Node
+     uses: actions/setup-node@v1
+     with:
+      node-version: '12.x'
+   - name: Publish new version if applicable
+     run: npx or-release --repository=$GITHUB_REPOSITORY
+     env:
+      OR_RELEASE_TOKEN: ${{ secrets.OR_RELEASE_TOKEN }}
