@@ -13,5 +13,8 @@
 		"notion"
 	],
 	"author": "Sergei Orlov <hello@orlow.dev> (https://orlow.dev/)",
-	"license": "MIT"
+	"license": "0BSD",
+	"dependencies": {
+		"node-fetch": "^2.6.1"
+	}
 }
