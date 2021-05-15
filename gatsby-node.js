@@ -1,14 +1,28 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/node-apis/
- */
-// You can delete this file if you're not using it
+const { getPages } = require("./notion")
 
-/**
- * You can uncomment the following line to verify that
- * your plugin is being loaded in your site.
- *
- * See: https://www.gatsbyjs.com/docs/creating-a-local-plugin/#developing-a-local-plugin-that-is-outside-your-project
- */
-exports.onPreInit = () => console.log("Loaded gatsby-source-notion-api")
+const NODE_TYPE = "Notion"
+
+exports.sourceNodes = async (
+	{ actions, createContentDigest, createNodeId, reporter },
+	pluginOptions,
+) => {
+	const { createNode } = actions
+
+	const data = {
+		pages: await getPages(pluginOptions, reporter),
+	}
+
+	data.pages.forEach((page) =>
+		createNode({
+			id: createNodeId(`${NODE_TYPE}-${page.id}`),
+			raw: page,
+			parent: null,
+			children: [],
+			internal: {
+				type: NODE_TYPE,
+				content: JSON.stringify(page),
+				contentDigest: createContentDigest(page),
+			},
+		}),
+	)
+}
