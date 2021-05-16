@@ -24,11 +24,37 @@ exports.sourceNodes = async (
 			[],
 		)
 
-		const title = properties.find((property) => property.type == "title").title[0].plain_text
+		const title = properties
+			.find((property) => property.type == "title")
+			.title.reduce((acc, chunk) => {
+				if (chunk.type == "text") {
+					return acc.concat(chunk.plain_text)
+				}
+
+				if (chunk.type == "mention") {
+					if (chunk.mention.type == "user") {
+						return acc.concat(chunk.mention.user.name)
+					}
+
+					if (chunk.mention.type == "date") {
+						if (chunk.mention.date.end) {
+							return acc.concat(`${chunk.mention.date.start} → ${chunk.mention.date.start}`)
+						}
+
+						return acc.concat(chunk.mention.date.start)
+					}
+
+					if (chunk.mention.type == "page") {
+						return acc.concat(chunk.plain_text)
+					}
+				}
+
+				return acc
+			}, "")
 
 		createNode({
 			id: createNodeId(`${NODE_TYPE}-${page.id}`),
-			title,
+			title: title.trim(),
 			properties,
 			archived: page.archived,
 			createdAt: page.created_time,
