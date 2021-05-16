@@ -21,6 +21,7 @@ exports.sourceNodes = async (
 			return {
 				...acc,
 				[key]: {
+					id: page.properties[key].id,
 					key,
 					value: page.properties[key][page.properties[key].type],
 					type: page.properties[key].type,
