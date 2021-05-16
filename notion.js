@@ -42,7 +42,7 @@ const getPageContent = async ({ page, notionVersion, token }, reporter) => {
 
 const getPages = async ({ token, databaseId, notionVersion = "2021-05-13" }, reporter) => {
 	try {
-		const db = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query?page_size=100`, {
+		const db = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
 			method: "POST",
 			body: JSON.stringify({
 				page_size: 100,
