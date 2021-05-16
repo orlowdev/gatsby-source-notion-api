@@ -15,8 +15,11 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Install dependencies
         run: yarn
-      - run: |
+      - name: Put version to package.json
+        run: |
           sed -i s/"\"version\":.*/\"version\": \"$RELEASE_VERSION\","/ package.json
+      - name: Update Publish Config
+        run: sed -i 's^registry-url^registry.npmjs.org^' package.json
       - name: Publish to NPM
         run: npm publish
         env:
@@ -25,6 +28,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Store lowercase actor name
+        run: |
+          echo 'actor_name<<EOF' >> $GITHUB_ENV
+          echo ${{ github.actor }} | tr "A-Z" "a-z" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+      - name: Store package name
+        run: |
+          echo 'package_name<<EOF' >> $GITHUB_ENV
+          grep -Po '"name": *\K"[^"]*"' package.json | grep -oP '"\K[^"\047]+(?=["\047])' >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
       - uses: actions/setup-node@v1
         with:
           node-version: "12.x"
@@ -33,8 +46,17 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Install dependencies
         run: yarn
-      - run: |
+      - name: Put version to package.json
+        run: |
           sed -i s/"\"version\":.*/\"version\": \"$RELEASE_VERSION\","/ package.json
+      - name: Update Package Name
+        run: |
+          sed -i 's,"name": "${{ env.package_name }}","name": "@${{ env.actor_name }}/${{ env.package_name }}",' package.json
+          cat package.json
+      - name: Update Publish Config
+        run: |
+          sed -i 's^registry-url^npm.pkg.github.com/@${{ env.actor_name }}^' package.json
+          cat package.json
       - name: Publish to GHP
         run: npm publish --access=public
         env:
