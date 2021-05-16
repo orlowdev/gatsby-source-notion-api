@@ -13,44 +13,50 @@ exports.sourceNodes = async (
 	}
 
 	data.pages.forEach((page) => {
-		const properties = Object.keys(page.properties).reduce(
-			(acc, key) =>
-				acc.concat([
-					{
-						key,
-						...page.properties[key],
-					},
-				]),
-			[],
+		const properties = Object.keys(page.properties).reduce((acc, key) => {
+			if (page.properties[key].type == "title") {
+				return acc
+			}
+
+			return {
+				...acc,
+				[key]: {
+					key,
+					value: page.properties[key][page.properties[key].type],
+					type: page.properties[key].type,
+				},
+			}
+		}, {})
+
+		const titleProperty = Object.keys(page.properties).find(
+			(key) => page.properties[key].type == "title",
 		)
 
-		const title = properties
-			.find((property) => property.type == "title")
-			.title.reduce((acc, chunk) => {
-				if (chunk.type == "text") {
+		const title = page.properties[titleProperty].title.reduce((acc, chunk) => {
+			if (chunk.type == "text") {
+				return acc.concat(chunk.plain_text)
+			}
+
+			if (chunk.type == "mention") {
+				if (chunk.mention.type == "user") {
+					return acc.concat(chunk.mention.user.name)
+				}
+
+				if (chunk.mention.type == "date") {
+					if (chunk.mention.date.end) {
+						return acc.concat(`${chunk.mention.date.start} → ${chunk.mention.date.start}`)
+					}
+
+					return acc.concat(chunk.mention.date.start)
+				}
+
+				if (chunk.mention.type == "page") {
 					return acc.concat(chunk.plain_text)
 				}
+			}
 
-				if (chunk.type == "mention") {
-					if (chunk.mention.type == "user") {
-						return acc.concat(chunk.mention.user.name)
-					}
-
-					if (chunk.mention.type == "date") {
-						if (chunk.mention.date.end) {
-							return acc.concat(`${chunk.mention.date.start} → ${chunk.mention.date.start}`)
-						}
-
-						return acc.concat(chunk.mention.date.start)
-					}
-
-					if (chunk.mention.type == "page") {
-						return acc.concat(chunk.plain_text)
-					}
-				}
-
-				return acc
-			}, "")
+			return acc
+		}, "")
 
 		createNode({
 			id: createNodeId(`${NODE_TYPE}-${page.id}`),
