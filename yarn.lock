@@ -2259,6 +2259,11 @@ optionator@^0.8.1:
     type-check "~0.3.2"
     word-wrap "~1.2.3"
 
+or-pipets@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/or-pipets/-/or-pipets-1.0.1.tgz#0699c99f95a535614a585cd7fb3a1a216a47b5c0"
+  integrity sha512-xgIIdB4w00pbhtNPYLF/caifwbc4KrE7jy4WqiDRzRrC2g3YVR4ypRwbKRA/bXzftQEA2SK8c+wKI2R7kqKiLQ==
+
 ora@^5.0.0, ora@^5.2.0:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/ora/-/ora-5.4.0.tgz#42eda4855835b9cd14d33864c97a3c95a3f56bf4"
