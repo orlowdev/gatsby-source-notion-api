@@ -90,12 +90,16 @@ query {
 	allNotion {
 		edges {
 			node {
+				id
+				parent
+				children
+				internal
 				title
 				properties
-				archived
+				achived
 				createdAt
 				updatedAt
-				children
+				markdown
 				raw
 			}
 		}
@@ -156,6 +160,10 @@ Date of the last page update.
 ### `raw` (\*)
 
 Untouched contents of whatever Notion API returned.
+
+### `markdown` (String)
+
+Markdown contents of the page. Limited by blocks currently supported by Notion API. Unsupported blocks turn into HTML comments specifying that Notion marked this block as non-supported.
 
 ## Current state
 

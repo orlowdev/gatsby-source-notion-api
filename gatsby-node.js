@@ -1,4 +1,5 @@
 const { getPages } = require("./src/notion-api/get-pages")
+const { getNotionPageMD } = require("./src/transformers/get-page-md")
 const { getNotionPageProperties } = require("./src/transformers/get-page-properties")
 const { getNotionPageTitle } = require("./src/transformers/get-page-title")
 
@@ -21,6 +22,7 @@ exports.sourceNodes = async (
 			archived: page.archived,
 			createdAt: page.created_time,
 			updatedAt: page.last_edited_time,
+			markdown: getNotionPageMD(page),
 			raw: page,
 			parent: null,
 			children: [],
