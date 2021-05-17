@@ -18,7 +18,7 @@ exports.getBlocks = async ({ page, notionVersion, token }, reporter) => {
 				headers: {
 					"Content-Type": "application/json",
 					"Notion-Version": notionVersion,
-					"Authorization": `Bearer ${token}`,
+					Authorization: `Bearer ${token}`,
 				},
 			})
 				.then((res) => res.json())

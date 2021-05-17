@@ -7,7 +7,11 @@
 		"registry": "https://registry-url"
 	},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "ava",
+		"test:cover": "nyc ava",
+		"format": "prettier --write *.{js,json,md} **/*.{js,json,md} **/**/*.{js,json,md}",
+		"lint": "prettier -c *.{js,json,md} **/*.{js,json,md} **/**/*.{js,json,md}",
+		"commit": "gitmoji --commit",
 		"build": "echo \"No build script setup\""
 	},
 	"keywords": [
@@ -19,5 +23,57 @@
 	"license": "0BSD",
 	"dependencies": {
 		"node-fetch": "^2.6.1"
+	},
+	"devDependencies": {
+		"ava": "^3.15.0",
+		"gitmoji-cli": "^4.1.0",
+		"husky": "^6.0.0",
+		"nyc": "^15.1.0",
+		"prettier": "^2.3.0",
+		"sinon": "^10.0.0",
+		"yarn": "^1.22.10"
+	},
+	"husky": {
+		"hooks": {
+			"pre-push": "yarn lint"
+		}
+	},
+	"prettier": {
+		"printWidth": 100,
+		"trailingComma": "all",
+		"singleQuote": false,
+		"semi": false,
+		"useTabs": true,
+		"tabWidth": 1,
+		"bracketSpacing": true
+	},
+	"ava": {
+		"files": [
+			"test/**/*"
+		],
+		"extensions": [
+			"js"
+		],
+		"concurrency": 5,
+		"failFast": true,
+		"failWithoutAssertions": false,
+		"verbose": true,
+		"nodeArguments": [
+			"--trace-deprecation",
+			"--napi-modules"
+		]
+	},
+	"nyc": {
+		"reporter": [
+			"text",
+			"lcov",
+			"html"
+		],
+		"branches": 80,
+		"lines": 80,
+		"functions": 80,
+		"statements": 80,
+		"check-coverage": true,
+		"all": true
 	}
 }

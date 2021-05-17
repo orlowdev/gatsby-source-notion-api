@@ -12,7 +12,7 @@ exports.getPages = async ({ token, databaseId, notionVersion = "2021-05-13" }, r
 			headers: {
 				"Content-Type": "application/json",
 				"Notion-Version": notionVersion,
-				"Authorization": `Bearer ${token}`,
+				Authorization: `Bearer ${token}`,
 			},
 		}).then((res) => res.json())
 
