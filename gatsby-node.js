@@ -1,4 +1,4 @@
-const { getPages } = require("./notion")
+const { getPages } = require("./src/notion-api/get-pages")
 
 const NODE_TYPE = "Notion"
 
