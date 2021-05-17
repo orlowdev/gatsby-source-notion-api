@@ -1,13 +1,13 @@
 const fetch = require("node-fetch")
 const { errorMessage } = require("../error-message")
 
-exports.getBlocks = async ({ page, notionVersion, token }, reporter) => {
+exports.getBlocks = async ({ id, page, notionVersion, token }, reporter) => {
 	let hasMore = true
 	let pageContent = []
 	let startCursor = ""
 
 	while (hasMore) {
-		let url = `https://api.notion.com/v1/blocks/${page.id}/children`
+		let url = `https://api.notion.com/v1/blocks/${id}/children`
 
 		if (startCursor) {
 			url += `?start_cursor=${startCursor}`
@@ -32,7 +32,7 @@ exports.getBlocks = async ({ page, notionVersion, token }, reporter) => {
 		}
 	}
 
-	page.page_content = pageContent
+	page.children = pageContent
 
 	return page
 }

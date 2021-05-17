@@ -17,7 +17,7 @@ exports.getPages = async ({ token, databaseId, notionVersion = "2021-05-13" }, r
 		}).then((res) => res.json())
 
 		for (let page of db.results) {
-			page = await getBlocks({ page, token, notionVersion }, reporter)
+			page = await getBlocks({ id: page.id, page, token, notionVersion }, reporter)
 		}
 
 		return db.results
