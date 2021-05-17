@@ -14,29 +14,28 @@ exports.getBlocks = async ({ id, block, notionVersion, token }, reporter) => {
 		}
 
 		try {
-			await fetch(url, {
+			const result = await fetch(url, {
 				headers: {
 					"Content-Type": "application/json",
 					"Notion-Version": notionVersion,
 					Authorization: `Bearer ${token}`,
 				},
-			})
-				.then((res) => res.json())
-				.then(async (res) => {
-					for (let childBlock of res.results) {
-						if (childBlock.has_children) {
-							childBlock[childBlock.type].children = await this.getBlocks(
-								{ id: block.id, block: childBlock, notionVersion, token },
-								reporter,
-							)
-						}
-					}
+			}).then((res) => res.json())
 
-					blockContent = blockContent.concat(res.results)
-					startCursor = res.next_cursor
-					hasMore = res.has_more
-				})
+			for (let childBlock of result.results) {
+				if (childBlock.has_children) {
+					childBlock.children = await this.getBlocks(
+						{ id: childBlock.id, block: childBlock, notionVersion, token },
+						reporter,
+					)
+				}
+			}
+
+			blockContent = blockContent.concat(result.results)
+			startCursor = result.next_cursor
+			hasMore = result.has_more
 		} catch (e) {
+			console.log(e)
 			reporter.panic(errorMessage)
 		}
 	}
