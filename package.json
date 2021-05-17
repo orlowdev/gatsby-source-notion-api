@@ -4,7 +4,8 @@
 	"description": "Gatsby source plugin for official Notion.so API",
 	"main": "index.js",
 	"publishConfig": {
-		"registry": "https://registry-url"
+		"registry": "https://registry-url",
+		"access": "public"
 	},
 	"scripts": {
 		"test": "ava",
@@ -21,6 +22,16 @@
 	],
 	"author": "Sergei Orlov <hello@orlow.dev> (https://orlow.dev/)",
 	"license": "0BSD",
+	"homepage": "https://github.com/orlowdev/gatsby-source-notion-api",
+	"bugs": {
+		"email": "hello@orlow.dev",
+		"url": "https://github.com/orlowdev/gatsby-source-notion-api/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/orlowdev/gatsby-source-notion-api.git"
+	},
+	"readme": "https://github.com/orlowdev/gatsby-source-notion-api#readme",
 	"dependencies": {
 		"node-fetch": "^2.6.1"
 	},
