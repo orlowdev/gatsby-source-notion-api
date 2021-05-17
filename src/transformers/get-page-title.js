@@ -11,7 +11,7 @@ exports.getNotionPageTitle = (page) => {
 
 			if (chunk.type == "mention") {
 				if (chunk.mention.type == "user") {
-					return acc.concat(chunk.mention.user.name)
+					return acc.concat(chunk.plain_text)
 				}
 
 				if (chunk.mention.type == "date") {
