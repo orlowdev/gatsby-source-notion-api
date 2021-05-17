@@ -67,7 +67,8 @@ Before using this plugin, make sure you
    ![Notion integration sharing GIF](https://files.readme.io/0a267dd-share-database-with-integration.gif)
    Here's a reference:
    https://www.notion.so/{USER}/**{DATABASE_ID}**?{someotherirrelevantstuff}
-3. Then add this to your `gatsby-config.json`:
+
+Then add this to your `gatsby-config.json`:
 
 ```javascript
 plugins: [
