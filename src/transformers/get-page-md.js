@@ -53,9 +53,7 @@ exports.getNotionPageMD = (page) =>
 		}
 
 		if (block.type == "unsupported") {
-			return acc
-				.concat(`<!-- Block ${block.id} is not supported by Notion API. Yet. -->`)
-				.concat(EOL_MD)
+			return acc.concat(`<!-- This block is not supported by Notion API yet. -->`).concat(EOL_MD)
 		}
 
 		return acc
