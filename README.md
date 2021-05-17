@@ -25,6 +25,21 @@ in beta). With this plugin, you will be able to query your Notion pages in Gatsb
 
 An example (...coming soon)
 
+## Features
+
+- Get your Notion pages in Gatsby via GraphQL
+- Convenient access to page properties
+- Page contents in Markdown!
+- Normalised page title
+- All blocks styling represented in Markdown:
+  - **bold** (`\*\*$VALUE\*\*`)
+  - _italic_ (`\_$VALUE\_`)
+  - ~~strikethrough~~ (`\~\~$VALUE\~\~`)
+  - <u>underline</u> (`<u>$VALUE</u>`)
+  - `code` (`\`$VALUE\``)
+  - color 🤷 (`<span notion-color="$COLOR">$VALUE</span>`)
+- Access to raw data returned by Notion API
+
 ## Install
 
 ```sh
@@ -96,7 +111,7 @@ query {
 				internal
 				title
 				properties
-				achived
+				archived
 				createdAt
 				updatedAt
 				markdown
