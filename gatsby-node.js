@@ -18,8 +18,15 @@ exports.sourceNodes = async (
 	pages.forEach((page) => {
 		const title = getNotionPageTitle(page)
 		const properties = getNotionPageProperties(page)
+		const frontmatter = Object.keys(properties).reduce(
+			(acc, key) => ({
+				...acc,
+				[key]: properties[key].value,
+			}),
+			{ title },
+		)
 		const markdown = "---\n"
-			.concat(YAML.stringify({ title, ...properties }))
+			.concat(YAML.stringify(frontmatter))
 			.concat("\n---\n\n")
 			.concat(getNotionPageMD(page))
 
