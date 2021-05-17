@@ -32,11 +32,11 @@ An example (...coming soon)
 - Page contents in Markdown!
 - Normalised page title
 - All blocks styling represented in Markdown:
-  - **bold** (`\*\*$VALUE\*\*`)
-  - _italic_ (`\_$VALUE\_`)
-  - ~~strikethrough~~ (`\~\~$VALUE\~\~`)
+  - **bold** (`**$VALUE**`)
+  - _italic_ (`_$VALUE_`)
+  - ~~strikethrough~~ (`~~$VALUE~~`)
   - <u>underline</u> (`<u>$VALUE</u>`)
-  - `code` (`\`$VALUE\``)
+  - `code` (`$VALUE`)
   - color 🤷 (`<span notion-color="$COLOR">$VALUE</span>`)
 - Access to raw data returned by Notion API
 
