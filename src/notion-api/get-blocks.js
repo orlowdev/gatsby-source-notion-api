@@ -1,9 +1,9 @@
 const fetch = require("node-fetch")
 const { errorMessage } = require("../error-message")
 
-exports.getBlocks = async ({ id, page, notionVersion, token }, reporter) => {
+exports.getBlocks = async ({ id, block, notionVersion, token }, reporter) => {
 	let hasMore = true
-	let pageContent = []
+	let blockContent = []
 	let startCursor = ""
 
 	while (hasMore) {
@@ -22,8 +22,17 @@ exports.getBlocks = async ({ id, page, notionVersion, token }, reporter) => {
 				},
 			})
 				.then((res) => res.json())
-				.then((res) => {
-					pageContent = pageContent.concat(res.results)
+				.then(async (res) => {
+					for (let childBlock of res.results) {
+						if (childBlock.has_children) {
+							childBlock[childBlock.type].children = await this.getBlocks(
+								{ id: block.id, block: childBlock, notionVersion, token },
+								reporter,
+							)
+						}
+					}
+
+					blockContent = blockContent.concat(res.results)
 					startCursor = res.next_cursor
 					hasMore = res.has_more
 				})
@@ -32,7 +41,5 @@ exports.getBlocks = async ({ id, page, notionVersion, token }, reporter) => {
 		}
 	}
 
-	page.children = pageContent
-
-	return page
+	return blockContent
 }
