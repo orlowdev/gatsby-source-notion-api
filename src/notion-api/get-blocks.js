@@ -1,7 +1,7 @@
 const fetch = require("node-fetch")
 const { errorMessage } = require("../error-message")
 
-exports.getBlocks = async ({ id, block, notionVersion, token }, reporter) => {
+exports.getBlocks = async ({ id, notionVersion, token }, reporter) => {
 	let hasMore = true
 	let blockContent = []
 	let startCursor = ""
@@ -25,7 +25,7 @@ exports.getBlocks = async ({ id, block, notionVersion, token }, reporter) => {
 			for (let childBlock of result.results) {
 				if (childBlock.has_children) {
 					childBlock.children = await this.getBlocks(
-						{ id: childBlock.id, block: childBlock, notionVersion, token },
+						{ id: childBlock.id, notionVersion, token },
 						reporter,
 					)
 				}
