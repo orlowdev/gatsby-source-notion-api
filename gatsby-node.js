@@ -39,6 +39,7 @@ exports.sourceNodes = async (
 			updatedAt: page.last_edited_time,
 			markdownString: markdown,
 			raw: page,
+			json: JSON.stringify(page),
 			parent: null,
 			children: [],
 			internal: {
