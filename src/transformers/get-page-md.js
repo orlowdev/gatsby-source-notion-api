@@ -15,7 +15,7 @@ exports.getNotionPageMD = (page) =>
 		}
 
 		if (block.type == "paragraph") {
-			return acc.concat(blockToString(block.paragraph.text)).concat(`\n\n`)
+			return acc.concat(blockToString(block.paragraph.text)).concat(EOL_MD).concat(childBlocksString)
 		}
 
 		if (block.type.startsWith("heading_")) {
@@ -26,6 +26,7 @@ exports.getNotionPageMD = (page) =>
 				.concat(" ")
 				.concat(blockToString(block[block.type].text))
 				.concat(EOL_MD)
+				.concat(childBlocksString)
 		}
 
 		if (block.type == "to_do") {
@@ -33,14 +34,23 @@ exports.getNotionPageMD = (page) =>
 				.concat(`- [${block.to_do.checked ? "x" : " "}] `)
 				.concat(blockToString(block.to_do.text))
 				.concat(EOL_MD)
+				.concat(childBlocksString)
 		}
 
 		if (block.type == "bulleted_list_item") {
-			return acc.concat("* ").concat(blockToString(block.bulleted_list_item.text)).concat(EOL_MD)
+			return acc
+				.concat("* ")
+				.concat(blockToString(block.bulleted_list_item.text))
+				.concat(EOL_MD)
+				.concat(childBlocksString)
 		}
 
 		if (block.type == "numbered_list_item") {
-			return acc.concat("1. ").concat(blockToString(block.numbered_list_item.text)).concat(EOL_MD)
+			return acc
+				.concat("1. ")
+				.concat(blockToString(block.numbered_list_item.text))
+				.concat(EOL_MD)
+				.concat(childBlocksString)
 		}
 
 		if (block.type == "toggle") {
@@ -53,7 +63,10 @@ exports.getNotionPageMD = (page) =>
 		}
 
 		if (block.type == "unsupported") {
-			return acc.concat(`<!-- This block is not supported by Notion API yet. -->`).concat(EOL_MD)
+			return acc
+				.concat(`<!-- This block is not supported by Notion API yet. -->`)
+				.concat(EOL_MD)
+				.concat(childBlocksString)
 		}
 
 		return acc
