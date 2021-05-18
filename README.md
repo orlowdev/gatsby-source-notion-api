@@ -23,7 +23,7 @@ in beta). With this plugin, you will be able to query your Notion pages in Gatsb
 
 [Notion API Reference](https://developers.notion.com/reference/intro)
 
-An example (...coming soon)
+[An example](https://gatsby-source-notion-api-demo.netlify.app)
 
 ## Features
 
