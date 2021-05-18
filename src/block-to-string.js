@@ -7,6 +7,11 @@ const ifTrue = (predicate, transformer, orElse) => (data) =>
 
 const id = (x) => x
 
+const annotateEquation = ifTrue(
+	pick("equation"),
+	({ content }) => ({ content: `$${content}$` }),
+	id,
+)
 const annotateBold = ifTrue(pick("bold"), ({ content }) => ({ content: `**${content}**` }), id)
 const annotateItalic = ifTrue(pick("italic"), ({ content }) => ({ content: `_${content}_` }), id)
 const annotateCode = ifTrue(pick("code"), ({ content }) => ({ content: `\`${content}\`` }), id)
@@ -38,12 +43,18 @@ const stylize = pipeExtend(annotateBold)
 	.pipeExtend(annotateUnderline)
 	.pipeExtend(annotateColor)
 	.pipeExtend(annotateLink)
+	.pipeExtend(annotateEquation)
 
 exports.blockToString = (textBlocks) =>
 	textBlocks.reduce((text, textBlock) => {
 		const data = {
 			...textBlock.text,
 			...textBlock.annotations,
+		}
+
+		if (textBlock.type == "equation") {
+			data.content = textBlock.equation.expression
+			data.equation = true
 		}
 
 		if (textBlock.type == "mention") {
