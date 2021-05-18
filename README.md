@@ -39,6 +39,7 @@ An example (...coming soon)
   - `code` (`$VALUE`)
   - color 🤷 (`<span notion-color="$COLOR">$VALUE</span>`)
 - Access to raw data returned by Notion API
+- Support for `markdown-remark` and `mdx`
 
 ## Install
 
@@ -117,6 +118,23 @@ query {
 				updatedAt
 				markdown
 				raw
+			}
+		}
+	}
+}
+```
+
+Alternatively, you can use MarkdownRemark or MDX directly:
+
+```graphql
+query {
+	allMarkdownRemark {
+		edges {
+			node {
+				frontmatter {
+					title
+				}
+				html
 			}
 		}
 	}
