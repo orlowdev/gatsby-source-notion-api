@@ -31,7 +31,6 @@
 		"type": "git",
 		"url": "git+ssh://git@github.com/orlowdev/gatsby-source-notion-api.git"
 	},
-	"readme": "https://github.com/orlowdev/gatsby-source-notion-api#readme",
 	"dependencies": {
 		"node-fetch": "^2.6.1",
 		"or-pipets": "^1.0.1",
