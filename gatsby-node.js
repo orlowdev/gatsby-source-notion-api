@@ -15,14 +15,36 @@ exports.sourceNodes = async (
 		reporter,
 	)
 
+	/*
+		if (page.properties[key].type == "rich_text") {
+			page.properties[key].rich_text = blockToString(page.properties[key].rich_text)
+		} 
+		*/
+
 	pages.forEach((page) => {
 		const title = getNotionPageTitle(page)
 		const properties = getNotionPageProperties(page)
 		const frontmatter = Object.keys(properties).reduce(
-			(acc, key) => ({
-				...acc,
-				[key]: properties[key].value,
-			}),
+			(acc, key) => {
+				if (properties[key].type == "date") {
+					return {
+						...acc,
+						[key]: properties[key].value.start,
+					}
+				}
+
+				if (properties[key].type == "rich_text") {
+					return {
+						...acc,
+						[key]: blockToString(properties[key].value),
+					}
+				}
+
+				return {
+					...acc,
+					[key]: properties[key].value,
+				}
+			},
 			{ title },
 		)
 		const markdown = "---\n"
