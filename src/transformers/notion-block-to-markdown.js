@@ -19,7 +19,12 @@ exports.notionBlockToMarkdown = (block, lowerTitleLevel, depth = 0) =>
 
 			const isTableRow = p.startsWith("|") && p.endsWith("|")
 
-			const isCodeSnippetLine = block.paragraph?.text[0]?.plain_text?.startsWith("```")
+			const isCodeSnippetLine =
+				block.paragraph &&
+				block.paragraph.text &&
+				block.paragraph.text[0] &&
+				block.paragraph.text[0].plain_text &&
+				block.paragraph.text[0].plain_text.startsWith("```")
 
 			return acc
 				.concat(p)
