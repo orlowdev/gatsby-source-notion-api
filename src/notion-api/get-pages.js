@@ -27,7 +27,6 @@ exports.getPages = async ({ token, databaseId, notionVersion = "2021-05-13" }, r
 					Authorization: `Bearer ${token}`,
 				},
 			}).then((res) => res.json())
-			console.log(result.next_cursor, result.results.length)
 
 			startCursor = result.next_cursor
 			hasMore = result.has_more
@@ -40,7 +39,7 @@ exports.getPages = async ({ token, databaseId, notionVersion = "2021-05-13" }, r
 		} catch (e) {
 			reporter.panic(errorMessage)
 		}
-
-		return pages
 	}
+
+	return pages
 }
