@@ -87,8 +87,5 @@
 		"statements": 80,
 		"check-coverage": true,
 		"all": true
-	},
-	"peerDependencies": {
-		"gatsby-source-filesystem": "^3.6.0"
 	}
 }
