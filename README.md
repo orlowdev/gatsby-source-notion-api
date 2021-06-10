@@ -80,6 +80,8 @@ plugins: [
 		options: {
 			token: `$INTEGRATION_TOKEN`,
 			databaseId: `$DATABASE_ID`,
+			propsToFrontmatter: true,
+			lowerTitleLevel: true,
 		},
 	},
 	// ...
@@ -96,6 +98,14 @@ Integration token.
 
 The identifier of the database you want to get pages from. The integration identified by provided
 token must have access to the database with given id.
+
+`propsToFrontmatter` [boolean][defaults to **true**]
+
+Put Notion page props to Markdown frontmatter. If you set this to **false**, you will need to query `notion` to get page props.
+
+`lowerTitleLevel` [boolean][defaults to **true**]
+
+Push headings one level down. # becomes ##, ## becomes ###, ### becomes ####. Notion is limited to only 3 levels of heading. You can create ####, #####, etc. - they will not be reflected in Notion, but they will work properly in the Markdown output. Is **true** by default.
 
 ## How to query for nodes
 
@@ -114,7 +124,10 @@ query {
 				children
 				internal
 				title
-				properties
+				properties {
+					My_Prop_1
+					My_Prop_2
+				}
 				archived
 				createdAt
 				updatedAt
@@ -200,6 +213,39 @@ Untouched contents of whatever Notion API returned.
 ### `markdown` (String)
 
 Markdown contents of the page. Limited by blocks currently supported by Notion API. Unsupported blocks turn into HTML comments specifying that Notion marked this block as non-supported.
+
+## Attaching images via "Files" property
+
+If you want to turn images attached through the "Files" property into file nodes that you can use with gatsby-image, you need to attach remote file nodes to the "Files" property. In the example below, the `propsToFrontmatter` is set to **true** and the **_Hero Image_** Files property is used for images:
+
+```javascript
+// ./gatsby-node.js
+exports.onCreateNode = async ({ node, actions: { createNode }, createNodeId, getCache }) => {
+	if (node.internal.type === "MarkdownRemark") {
+		for (let i = 0; i < node.frontmatter["Hero Image"].length; i++) {
+			const name = node.frontmatter["Hero Image"][i].name
+
+			if (!name) {
+				continue
+			}
+
+			if (name.startsWith("http")) {
+				const fileNode = await createRemoteFileNode({
+					url: name,
+					parentNodeId: node.id,
+					createNode,
+					createNodeId,
+					getCache,
+				})
+
+				if (fileNode) {
+					node.frontmatter["Hero Image"][i].remoteImage___NODE = fileNode.id
+				}
+			}
+		}
+	}
+}
+```
 
 ## Current state
 
