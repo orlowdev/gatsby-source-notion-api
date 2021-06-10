@@ -3,37 +3,8 @@ const { notionBlockToMarkdown } = require("./src/transformers/notion-block-to-ma
 const { getNotionPageProperties } = require("./src/transformers/get-page-properties")
 const { getNotionPageTitle } = require("./src/transformers/get-page-title")
 const YAML = require("yaml")
-const { createRemoteFileNode } = require("gatsby-source-filesystem")
 
 const NOTION_NODE_TYPE = "Notion"
-
-exports.onCreateNode = async ({ node, actions: { createNode }, createNodeId, getCache }) => {
-	if (node.internal.type == NOTION_NODE_TYPE) {
-		const filesPropertyKey = Object.keys(node.properties).find(
-			(key) => node.properties[key].type == "files",
-		)
-
-		if (filesPropertyKey) {
-			for (let i = 0; i < node.properties[filesPropertyKey].value.length; i++) {
-				const name = node.properties[filesPropertyKey].value[i].name
-
-				if (name.startsWith("http")) {
-					const fileNode = await createRemoteFileNode({
-						url: name,
-						parentNodeId: node.id,
-						createNode,
-						createNodeId,
-						getCache,
-					})
-
-					if (fileNode) {
-						node.properties[filesPropertyKey].value[i].remoteImage___NODE = fileNode.id
-					}
-				}
-			}
-		}
-	}
-}
 
 exports.sourceNodes = async (
 	{ actions, createContentDigest, createNodeId, reporter },
