@@ -19,16 +19,9 @@ exports.notionBlockToMarkdown = (block, lowerTitleLevel, depth = 0) =>
 
 			const isTableRow = p.startsWith("|") && p.endsWith("|")
 
-			const isCodeSnippetLine =
-				block.paragraph &&
-				block.paragraph.text &&
-				block.paragraph.text[0] &&
-				block.paragraph.text[0].plain_text &&
-				block.paragraph.text[0].plain_text.startsWith("```")
-
 			return acc
 				.concat(p)
-				.concat(isTableRow || isCodeSnippetLine ? EOL_MD : EOL_MD.concat(EOL_MD))
+				.concat(isTableRow ? EOL_MD : EOL_MD.concat(EOL_MD))
 				.concat(childBlocksString)
 		}
 
@@ -80,11 +73,73 @@ exports.notionBlockToMarkdown = (block, lowerTitleLevel, depth = 0) =>
 
 		if (childBlock.type == "code") {
 			return acc
+				.concat(EOL_MD)
 				.concat("```", childBlock.code.language, EOL_MD)
 				.concat(blockToString(childBlock.code.text))
 				.concat(EOL_MD)
 				.concat("```")
 				.concat(childBlocksString)
+				.concat(EOL_MD)
+		}
+
+		if (childBlock.type == "image") {
+			const imageUrl =
+				childBlock.image.type == "external" ? childBlock.image.external.url : childBlock.image.file.url
+
+			return acc
+				.concat("![")
+				.concat(blockToString(childBlock.image.caption))
+				.concat("](")
+				.concat(imageUrl)
+				.concat(")")
+				.concat(EOL_MD)
+		}
+
+		if (childBlock.type == "audio") {
+			const audioUrl =
+				childBlock.audio.type == "external" ? childBlock.audio.external.url : childBlock.audio.file.url
+
+			return acc
+				.concat("<audio controls>")
+				.concat(EOL_MD)
+				.concat(`<source src="${audioUrl}" />`)
+				.concat(EOL_MD)
+				.concat("</audio>")
+				.concat(EOL_MD)
+		}
+
+		if (childBlock.type == "video" && childBlock.video.type == "external") {
+			const videoUrl = childBlock.video.external.url
+
+			return acc.concat(videoUrl).concat(EOL_MD)
+		}
+
+		if (childBlock.type == "embed") {
+			return acc.concat(childBlock.embed.url).concat(EOL_MD)
+		}
+
+		if (childBlock.type == "quote") {
+			return acc.concat("> ").concat(blockToString(childBlock.quote.text)).concat(EOL_MD)
+		}
+
+		// TODO: Add support for callouts, internal video, andd files
+
+		if (childBlock.type == "bookmark") {
+			const bookmarkUrl = childBlock.bookmark.url
+
+			const bookmarkCaption = blockToString(childBlock.bookmark.caption) || bookmarkUrl
+
+			return acc
+				.concat("[")
+				.concat(bookmarkCaption)
+				.concat("](")
+				.concat(bookmarkUrl)
+				.concat(")")
+				.concat(EOL_MD)
+		}
+
+		if (childBlock.type == "divider") {
+			return acc.concat("---").concat(EOL_MD)
 		}
 
 		if (childBlock.type == "unsupported") {
