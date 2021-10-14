@@ -78,6 +78,15 @@ exports.notionBlockToMarkdown = (block, lowerTitleLevel, depth = 0) =>
 				.concat("</details>")
 		}
 
+		if (childBlock.type == "code") {
+			return acc
+				.concat("```", childBlock.code.language, EOL_MD)
+				.concat(blockToString(childBlock.code.text))
+				.concat(EOL_MD)
+				.concat("```")
+				.concat(childBlocksString)
+		}
+
 		if (childBlock.type == "unsupported") {
 			return acc
 				.concat(`<!-- This block is not supported by Notion API yet. -->`)
