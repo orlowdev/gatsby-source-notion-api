@@ -2,7 +2,21 @@ const fetch = require("node-fetch")
 const { errorMessage } = require("../error-message")
 const { getBlocks } = require("./get-blocks")
 
-exports.getPages = async ({ token, databaseId, notionVersion = "2021-05-13" }, reporter) => {
+async function fetchPageChildren({ page, token, notionVersion }, reporter, cache) {
+	let cacheKey = `notionApiPageChildren:${page.id}:${page.last_edited_time}`
+
+	let children = await cache.get(cacheKey)
+
+	if (children) {
+		return children
+	}
+
+	children = await getBlocks({ id: page.id, token, notionVersion }, reporter)
+	await cache.set(cacheKey, children)
+	return children
+}
+
+exports.getPages = async ({ token, databaseId, notionVersion = "2021-05-13" }, reporter, cache) => {
 	let hasMore = true
 	let startCursor = ""
 	const url = `https://api.notion.com/v1/databases/${databaseId}/query`
@@ -32,8 +46,7 @@ exports.getPages = async ({ token, databaseId, notionVersion = "2021-05-13" }, r
 			hasMore = result.has_more
 
 			for (let page of result.results) {
-				page.children = await getBlocks({ id: page.id, token, notionVersion }, reporter)
-
+				page.children = await fetchPageChildren({ page, token, notionVersion }, reporter, cache)
 				pages.push(page)
 			}
 		} catch (e) {
