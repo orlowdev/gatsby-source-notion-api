@@ -7,10 +7,10 @@ const YAML = require("yaml")
 const NOTION_NODE_TYPE = "Notion"
 
 exports.sourceNodes = async (
-	{ actions, createContentDigest, createNodeId, reporter },
+	{ actions, createContentDigest, createNodeId, reporter, cache },
 	{ token, databaseId, propsToFrontmatter = true, lowerTitleLevel = true },
 ) => {
-	const pages = await getPages({ token, databaseId }, reporter)
+	const pages = await getPages({ token, databaseId }, reporter, cache)
 
 	pages.forEach((page) => {
 		const title = getNotionPageTitle(page)
