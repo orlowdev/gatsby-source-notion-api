@@ -214,6 +214,8 @@ Untouched contents of whatever Notion API returned.
 
 Markdown contents of the page. Limited by blocks currently supported by Notion API. Unsupported blocks turn into HTML comments specifying that Notion marked this block as non-supported.
 
+Since there's not semantic HTML analog for column lists and columns, these Notion blocks are transformed to `<ColumnList>` and `<Column>` components in the markdown. To customize these components, you can write custom components for these and [include them in your `MDXProvider`](https://www.gatsbyjs.com/docs/mdx/importing-and-using-components#make-components-available-globally-as-shortcodes).
+
 ## Attaching images via "Files" property
 
 If you want to turn images attached through the "Files" property into file nodes that you can use with gatsby-image, you need to attach remote file nodes to the "Files" property. In the example below, the `propsToFrontmatter` is set to **true** and the **_Hero Image_** Files property is used for images:
