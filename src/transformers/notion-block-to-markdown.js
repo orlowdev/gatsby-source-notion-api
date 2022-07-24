@@ -133,6 +133,33 @@ exports.notionBlockToMarkdown = (block, lowerTitleLevel) => {
 		return `${EOL_MD}---${EOL_MD}`
 	}
 
+	// Column List
+	if (block.type == "column_list") {
+		return [
+			EOL_MD,
+			"<ColumnList>",
+			EOL_MD,
+			markdown,
+			EOL_MD,
+			"</ColumnList>",
+			EOL_MD
+		].join("")
+	}
+
+	// Column
+	if (block.type == "column") {
+		return [
+			"<Column>",
+			EOL_MD,
+			EOL_MD,
+			markdown,
+			EOL_MD,
+			EOL_MD,
+			"</Column>",
+			EOL_MD
+		].join("")
+	}
+
 	// Unsupported types.
 	// TODO: Add support for callouts, internal video, and files
 	return [EOL_MD, `<!-- This block type '${block.type}' is not supported yet. -->`, EOL_MD].join("")
