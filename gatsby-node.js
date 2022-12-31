@@ -4,17 +4,18 @@ const { getNotionPageProperties } = require("./src/transformers/get-page-propert
 const { getNotionPageTitle } = require("./src/transformers/get-page-title")
 const YAML = require("yaml")
 
-const NOTION_NODE_TYPE = "Notion"
+const DEFAULT_NOTION_NODE_TYPE = "Notion"
 
 exports.sourceNodes = async (
 	{ actions, createContentDigest, createNodeId, reporter, cache },
-	{ token, databaseId, propsToFrontmatter = true, lowerTitleLevel = true },
+	{ token, databaseId, nodeTypeName = null, propsToFrontmatter = true, lowerTitleLevel = true },
 ) => {
 	const pages = await getPages({ token, databaseId }, reporter, cache)
 
 	pages.forEach((page) => {
 		const title = getNotionPageTitle(page)
 		const properties = getNotionPageProperties(page)
+		const notionNodeType = nodeTypeName ?? DEFAULT_NOTION_NODE_TYPE;
 		let markdown = notionBlockToMarkdown(page, lowerTitleLevel)
 
 		if (propsToFrontmatter) {
@@ -30,7 +31,7 @@ exports.sourceNodes = async (
 		}
 
 		actions.createNode({
-			id: createNodeId(`${NOTION_NODE_TYPE}-${page.id}`),
+			id: createNodeId(`${notionNodeType}-${page.id}`),
 			title,
 			properties,
 			archived: page.archived,
@@ -42,7 +43,7 @@ exports.sourceNodes = async (
 			parent: null,
 			children: [],
 			internal: {
-				type: NOTION_NODE_TYPE,
+				type: notionNodeType,
 				mediaType: "text/markdown",
 				content: markdown,
 				contentDigest: createContentDigest(page),

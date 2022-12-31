@@ -99,6 +99,12 @@ Integration token.
 The identifier of the database you want to get pages from. The integration identified by provided
 token must have access to the database with given id.
 
+`nodeTypeName` [string][optional]
+
+Defines the name of the entity to be queried. For instance, a `nodeTypeName` of value `notionTeamMember` will allow creating queries named `allNotionTeamMember(...)`. Defaults to the string `"Notion"`.
+
+This is particularly useful in case you want having multiple Notion databases.
+
 `propsToFrontmatter` [boolean][defaults to **true**]
 
 Put Notion page props to Markdown frontmatter. If you set this to **false**, you will need to query `notion` to get page props.
@@ -253,12 +259,41 @@ exports.onCreateNode = async ({ node, actions: { createNode }, createNodeId, get
 
 - Due to the fact that Notion API only appeared recently, and it is still in beta, some blocks are
   marked "unsupported". Among others, images cannot be fetched for now
-- Currently, `gatsby-source-notion-api` can only work with one provided database. In further
-  releases, all databases reachable by the Integration will be available for querying
+- ~~Currently, `gatsby-source-notion-api` can only work with one provided database. In further
+  releases, all databases reachable by the Integration will be available for querying~~ Querying multiple databases is now supported! Please read the doc below.
 - ~~Nested blocks are currently skipped. E.g. if a list item has a nested sublist, it's contents will
   be omitted. This will be fixed in the nearest releases~~ Nested blocks are supported as of `0.4.0`!
 - ~~Only raw content is available. Raw meaning whatever Notion returns. Further releases will aim at
   providing a more convenient data format apart from the raw one~~ `0.3.0` features support for **archived**, **createdAt**, **updatedAt**, **properties** and **title**.
+
+## Querying multiple databases
+
+In order to query multiple databases, you can add multiple `gatsby-source-notion-api` in your project’s `gatsby-config.js` **and** set different `nodeTypeName` values. For instance:
+
+```javascript
+  plugins: [
+    {
+      resolve: `gatsby-source-notion-api`,
+      options: {
+        token: `$INTEGRATION_TOKEN`,
+        databaseId: `$DATABASE_ID`,
+        nodeTypeName: "notionTeamMember",
+        propsToFrontmatter: true,
+        lowerTitleLevel: true,
+      },
+    },
+    {
+      resolve: `gatsby-source-notion-api`,
+      options: {
+        token: `$INTEGRATION_TOKEN`,
+        databaseId: `$DATABASE_ID`,
+        nodeTypeName: "notionTask",
+        propsToFrontmatter: true,
+        lowerTitleLevel: true,
+      },
+    },
+  ],
+```
 
 ## 🎉 You did it
 
